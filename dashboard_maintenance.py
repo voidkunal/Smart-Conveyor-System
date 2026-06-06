@@ -4,7 +4,12 @@ import datetime
 import time
 from product_detector import ConveyorMonitor
 from database import maintenance_col, messages_col
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration
+from streamlit_webrtc import (
+    webrtc_streamer,
+    VideoTransformerBase,
+    RTCConfiguration,
+    WebRtcMode,
+)
 import av
 
 RTC_CONFIGURATION = RTCConfiguration(
@@ -60,13 +65,13 @@ def render_maintenance_dashboard():
                 st.error("SYSTEM LOCKED BY ADMIN - Camera Disabled.")
             else:
                 webrtc_ctx = webrtc_streamer(
-                    key="maintenance_scanner",
-                    mode=1, 
-                    rtc_configuration=RTC_CONFIGURATION,
-                    video_processor_factory=MaintenanceVideoProcessor,
-                    media_stream_constraints={"video": True, "audio": False},
-                    async_processing=True,
-                )
+    key="maintenance_scanner",
+    mode=WebRtcMode.SENDRECV,
+    rtc_configuration=RTC_CONFIGURATION,
+    video_processor_factory=MaintenanceVideoProcessor,
+    media_stream_constraints={"video": True, "audio": False},
+    async_processing=True,
+)
             
         with col2:
             st.markdown("<h4 style='color: #e0e0e0;'>Alerts</h4>", unsafe_allow_html=True)
