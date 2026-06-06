@@ -1,7 +1,6 @@
 import streamlit as st
 import base64
 import os
-os.system("pip uninstall -y opencv-python")
 from database import setup_default_admin, users_col
 from auth import render_login
 from attendance import log_logout
@@ -30,9 +29,7 @@ def inject_cinematic_css():
     is_authenticated = st.session_state.get('current_user') is not None
     video_path = "bg_dashboard.mp4" if is_authenticated else "bg_login.mp4"
     
-    
     encoded_video = load_video_base64(video_path)
-    
     
     video_html = ""
     if encoded_video:
@@ -42,7 +39,6 @@ def inject_cinematic_css():
         </video>
         """
 
-    
     st.markdown(f"""
     {video_html}
     <style>
@@ -142,10 +138,7 @@ def main():
             if user:
                 st.session_state.current_user = user
     
-    
-    
     inject_cinematic_css()
-    
     
     if not st.session_state.current_user:
         
@@ -167,7 +160,6 @@ def main():
                 st.rerun()
 
         st.markdown("<br><br><br>", unsafe_allow_html=True)
-        
         
         if st.session_state.current_page == "home":
             st.markdown("<h1 style='text-align: center; font-size: 4.5rem; font-weight: 800; margin-bottom: 0px; text-shadow: 0 4px 10px rgba(0,0,0,0.8);'>Industrial Automation System</h1>", unsafe_allow_html=True)
@@ -202,14 +194,12 @@ def main():
                 
                 render_login()
                 
-        
         st.markdown("""
         <div style="position: fixed; bottom: 20px; left: 0; width: 100%; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
             © Kunal Mandal Custom Build Application 2026. All rights reserved.
         </div>
         """, unsafe_allow_html=True)
         
-    
     else:
         render_header()
         user_role = st.session_state.current_user.get('Role', 'Client Staff')
