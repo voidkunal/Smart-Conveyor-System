@@ -1,6 +1,8 @@
+import os
+os.system("pip uninstall -y opencv-python")
+
 import streamlit as st
 import base64
-import os
 from database import setup_default_admin, users_col
 from auth import render_login
 from attendance import log_logout
@@ -25,7 +27,6 @@ def load_video_base64(file_path):
     return None
 
 def inject_cinematic_css():
-    
     is_authenticated = st.session_state.get('current_user') is not None
     video_path = "bg_dashboard.mp4" if is_authenticated else "bg_login.mp4"
     
@@ -42,83 +43,23 @@ def inject_cinematic_css():
     st.markdown(f"""
     {video_html}
     <style>
-    /* Global Transparent App Background */
-    .stApp {{ 
-        background-color: transparent !important;
-        background: transparent !important;
-        color: #ffffff; 
-        font-family: 'Inter', -apple-system, sans-serif;
-    }}
-    
-    /* Hide top padding */
+    .stApp {{ background-color: transparent !important; background: transparent !important; color: #ffffff; font-family: 'Inter', sans-serif; }}
     .block-container {{ padding-top: 2rem !important; }}
     header[data-testid="stHeader"] {{ background: transparent !important; }}
-
-    /* Transparent Sidebar with Blur */
-    [data-testid="stSidebar"] {{
-        background-color: rgba(15, 17, 21, 0.65) !important;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-right: 1px solid rgba(255,255,255,0.05);
-    }}
-
-    /* Form & Container Styling (Glassmorphism Cards) */
-    [data-testid="stForm"], .stDataFrame, div[data-testid="stVerticalBlock"] > div[style*="background-color"] {{ 
-        background-color: rgba(26, 28, 36, 0.7) !important; 
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255,255,255,0.1) !important; 
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5) !important; 
-        border-radius: 12px !important;
-    }}
-
-    /* Input Fields */
-    div[data-baseweb="input"] > div, div[data-baseweb="select"] > div {{
-        background-color: rgba(38, 39, 48, 0.6) !important; 
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        border-radius: 8px !important;
-        transition: 0.2s ease;
-    }}
-    div[data-baseweb="input"] > div:focus-within, div[data-baseweb="select"] > div:focus-within {{
-        border: 1px solid #1e90ff !important;
-        background-color: rgba(43, 44, 54, 0.9) !important;
-    }}
+    [data-testid="stSidebar"] {{ background-color: rgba(15, 17, 21, 0.65) !important; backdrop-filter: blur(15px); border-right: 1px solid rgba(255,255,255,0.05); }}
+    [data-testid="stForm"], .stDataFrame, div[data-testid="stVerticalBlock"] > div[style*="background-color"] {{ background-color: rgba(26, 28, 36, 0.7) !important; backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5) !important; border-radius: 12px !important; }}
+    div[data-baseweb="input"] > div, div[data-baseweb="select"] > div {{ background-color: rgba(38, 39, 48, 0.6) !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 8px !important; transition: 0.2s ease; }}
+    div[data-baseweb="input"] > div:focus-within, div[data-baseweb="select"] > div:focus-within {{ border: 1px solid #1e90ff !important; background-color: rgba(43, 44, 54, 0.9) !important; }}
     div[data-baseweb="input"] input {{ background-color: transparent !important; color: #ffffff !important; padding: 12px 16px !important; }}
-
-    /* Buttons */
-    button[kind="primary"] {{
-        background: linear-gradient(135deg, #1e90ff 0%, #0077ff 100%) !important;
-        color: white !important;
-        border-radius: 24px !important;
-        border: none !important;
-        padding: 10px 24px !important;
-        font-weight: 600 !important;
-        transition: 0.3s ease;
-    }}
-    button[kind="primary"]:hover {{
-        box-shadow: 0 4px 20px rgba(30, 144, 255, 0.6) !important;
-        transform: translateY(-2px);
-    }}
-    
-    button[kind="secondary"] {{
-        background-color: rgba(255,255,255,0.05) !important;
-        backdrop-filter: blur(5px);
-        color: #1e90ff !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        border-radius: 24px !important;
-        font-weight: 600 !important;
-    }}
-    button[kind="secondary"]:hover {{
-        background-color: rgba(255,255,255,0.1) !important;
-        color: white !important;
-    }}
-
+    button[kind="primary"] {{ background: linear-gradient(135deg, #1e90ff 0%, #0077ff 100%) !important; color: white !important; border-radius: 24px !important; border: none !important; padding: 10px 24px !important; font-weight: 600 !important; transition: 0.3s ease; }}
+    button[kind="primary"]:hover {{ box-shadow: 0 4px 20px rgba(30, 144, 255, 0.6) !important; transform: translateY(-2px); }}
+    button[kind="secondary"] {{ background-color: rgba(255,255,255,0.05) !important; backdrop-filter: blur(5px); color: #1e90ff !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 24px !important; font-weight: 600 !important; }}
+    button[kind="secondary"]:hover {{ background-color: rgba(255,255,255,0.1) !important; color: white !important; }}
     .subtext {{ color: #b0b0b5; font-size: 1.1rem; text-align: center; margin-bottom: 2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }}
     </style>
     """, unsafe_allow_html=True)
 
 setup_default_admin()
-
 
 if 'current_user' not in st.session_state: st.session_state.current_user = None
 if 'billing_data' not in st.session_state: st.session_state.billing_data = []
@@ -126,38 +67,25 @@ if 'maintenance_data' not in st.session_state: st.session_state.maintenance_data
 if 'current_page' not in st.session_state: st.session_state.current_page = "home" 
 
 def main():
-    
     if not st.session_state.current_user and "user" in st.query_params:
         restored_id = st.query_params["user"]
         if restored_id == "admin":
-            st.session_state.current_user = {
-                'Staff ID': 'admin', 'Name': 'System Admin', 'Role': 'Admin', 'Email': 'offline@localhost', 'Phone':'000'
-            }
+            st.session_state.current_user = {'Staff ID': 'admin', 'Name': 'System Admin', 'Role': 'Admin', 'Email': 'offline@localhost', 'Phone':'000'}
         else:
             user = users_col.find_one({"Staff ID": restored_id})
-            if user:
-                st.session_state.current_user = user
+            if user: st.session_state.current_user = user
     
     inject_cinematic_css()
     
     if not st.session_state.current_user:
-        
         col_logo, col_space, col_home, col_policy, col_btn = st.columns([2, 4, 1, 1, 1.5])
-        with col_logo:
-            st.markdown("<h3 style='margin:0; padding-top:5px; font-weight:800; text-shadow: 0 2px 5px rgba(0,0,0,0.8);'>Kunal</h3>", unsafe_allow_html=True)
-        
+        with col_logo: st.markdown("<h3 style='margin:0; padding-top:5px; font-weight:800; text-shadow: 0 2px 5px rgba(0,0,0,0.8);'>Kunal</h3>", unsafe_allow_html=True)
         with col_home:
-            if st.button("Home", use_container_width=True):
-                st.session_state.current_page = "home"
-                st.rerun()
+            if st.button("Home", use_container_width=True): st.session_state.current_page = "home"; st.rerun()
         with col_policy:
-            if st.button("Policy", use_container_width=True):
-                st.session_state.current_page = "policy"
-                st.rerun()
+            if st.button("Policy", use_container_width=True): st.session_state.current_page = "policy"; st.rerun()
         with col_btn:
-            if st.button("Log In", type="primary", use_container_width=True):
-                st.session_state.current_page = "login"
-                st.rerun()
+            if st.button("Log In", type="primary", use_container_width=True): st.session_state.current_page = "login"; st.rerun()
 
         st.markdown("<br><br><br>", unsafe_allow_html=True)
         
@@ -165,13 +93,10 @@ def main():
             st.markdown("<h1 style='text-align: center; font-size: 4.5rem; font-weight: 800; margin-bottom: 0px; text-shadow: 0 4px 10px rgba(0,0,0,0.8);'>Industrial Automation System</h1>", unsafe_allow_html=True)
             st.markdown("<p class='subtext'>Access, monitor, and<br>protect your factory product with Customise AI.</p>", unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
-            
             col_spacer1, col_action1, col_spacer2 = st.columns([3, 4, 3])
             with col_action1:
                 st.markdown("<div style='text-align: center;'><p style='color: #b0b0b5; text-shadow: 0 1px 3px rgba(0,0,0,0.8);'>System strictly restricted to authorized staff.</p></div>", unsafe_allow_html=True)
-                if st.button("Login", type="primary", use_container_width=True):
-                    st.session_state.current_page = "login"
-                    st.rerun()
+                if st.button("Login", type="primary", use_container_width=True): st.session_state.current_page = "login"; st.rerun()
 
         elif st.session_state.current_page == "policy":
             col_spacer1, col_policy, col_spacer2 = st.columns([1, 4, 1])
@@ -191,14 +116,9 @@ def main():
             with col_login:
                 st.markdown("<h2 style='text-align: center; margin-bottom: 5px; text-shadow: 0 2px 5px rgba(0,0,0,0.8);'>Welcome Back</h2>", unsafe_allow_html=True)
                 st.markdown("<p style='text-align: center; color: #b0b0b5; margin-bottom: 30px; text-shadow: 0 1px 3px rgba(0,0,0,0.8);'>Please enter your credentials to log in</p>", unsafe_allow_html=True)
-                
                 render_login()
                 
-        st.markdown("""
-        <div style="position: fixed; bottom: 20px; left: 0; width: 100%; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">
-            © Kunal Mandal Custom Build Application 2026. All rights reserved.
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("<div style='position: fixed; bottom: 20px; left: 0; width: 100%; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);'>© Kunal Mandal Custom Build Application 2026. All rights reserved.</div>", unsafe_allow_html=True)
         
     else:
         render_header()
@@ -210,12 +130,9 @@ def main():
         st.sidebar.markdown("---")
         
         menu_options = ["Logout"]
-        if user_role == "Admin":
-            menu_options = ["Admin Analytics", "Client Mode", "Maintenance Mode", "Export Reports", "Logout"]
-        elif user_role == "Client Staff":
-            menu_options = ["Client Mode", "Logout"]
-        elif user_role == "Maintenance Staff":
-            menu_options = ["Maintenance Mode", "Logout"]
+        if user_role == "Admin": menu_options = ["Admin Analytics", "Client Mode", "Maintenance Mode", "Export Reports", "Logout"]
+        elif user_role == "Client Staff": menu_options = ["Client Mode", "Logout"]
+        elif user_role == "Maintenance Staff": menu_options = ["Maintenance Mode", "Logout"]
             
         choice = st.sidebar.radio("Navigation Menu", menu_options)
         
