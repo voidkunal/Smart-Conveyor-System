@@ -1,6 +1,7 @@
 import streamlit as st
 import base64
 import os
+os.system("pip uninstall -y opencv-python")
 from database import setup_default_admin, users_col
 from auth import render_login
 from attendance import log_logout
