@@ -4,7 +4,12 @@ import datetime
 import time
 from product_detector import ConveyorMonitor
 from database import billing_col
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration
+from streamlit_webrtc import (
+    webrtc_streamer,
+    VideoTransformerBase,
+    RTCConfiguration,
+    WebRtcMode,
+)
 import av
 
 # Standard Google servers to bypass cloud firewalls
@@ -52,13 +57,13 @@ def render_client_dashboard():
             
             # The WebRTC Cloud Camera replaces the old toggle and cv2 loop
             webrtc_ctx = webrtc_streamer(
-                key="client_scanner",
-                mode=1, # SENDRECV
-                rtc_configuration=RTC_CONFIGURATION,
-                video_processor_factory=ClientVideoProcessor,
-                media_stream_constraints={"video": True, "audio": False},
-                async_processing=True,
-            )
+    key="client_scanner",
+    mode=WebRtcMode.SENDRECV,
+    rtc_configuration=RTC_CONFIGURATION,
+    video_processor_factory=ClientVideoProcessor,
+    media_stream_constraints={"video": True, "audio": False},
+    async_processing=True,
+) #new update
             
         with col2:
             st.markdown("<h4 style='color: #e0e0e0;'>Cart</h4>", unsafe_allow_html=True)
