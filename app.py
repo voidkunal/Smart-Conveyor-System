@@ -1,6 +1,4 @@
 import os
-os.system("bash pre_install.sh")
-
 import streamlit as st
 import base64
 from database import setup_default_admin, users_col
