@@ -1,5 +1,5 @@
 import os
-os.system("pip uninstall -y opencv-python")
+os.system("bash pre_install.sh")
 
 import streamlit as st
 import base64
